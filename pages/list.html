@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>申請書一覧 | 稟議書管理システム</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/list.css"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+<div id="app" class="container list-container">
+    
+    <div class="list-header">
+        <h1>申請書一覧 (Daftar Pengajuan)</h1>
+        <a href="contract_form.html" class="btn btn-primary btn-create">
+            <i class="fas fa-plus"></i> 新規作成
+        </a>
+    </div>
+
+    <div class="search-area">
+        <div class="search-row">
+            <div class="search-group">
+                <label>稟議種別:</label>
+                <label><input type="radio" value="all" v-model="filters.type"> すべて</label>
+                <label><input type="radio" value="common" v-model="filters.type"> 通常稟議</label>
+                <label><input type="radio" value="contract" v-model="filters.type"> 契約稟議</label>
+            </div>
+            <div class="search-group">
+                <label>キーワード:</label>
+                <input type="text" v-model="filters.keyword" placeholder="件名・取引先名">
+            </div>
+            <div class="search-group">
+                <button class="btn btn-secondary btn-sm" @click="resetFilters">クリア</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-nav">
+        <button :class="['tab-item', { active: currentTab === 'all' }]" @click="currentTab = 'all'">
+            すべて (Semua)
+        </button>
+        <button :class="['tab-item', { active: currentTab === 'waiting' }]" @click="currentTab = 'waiting'">
+            承認待ち (Menunggu)
+        </button>
+        <button :class="['tab-item', { active: currentTab === 'approved' }]" @click="currentTab = 'approved'">
+            承認済み (Disetujui)
+        </button>
+        <button :class="['tab-item', { active: currentTab === 'rejected' }]" @click="currentTab = 'rejected'">
+            否認・取下
+        </button>
+        <button :class="['tab-item', { active: currentTab === 'action_needed' }]" @click="currentTab = 'action_needed'">
+            要承認 (Perlu Aksi)
+            <span class="badge" v-if="pendingCount > 0">{{ pendingCount }}</span>
+        </button>
+    </div>
+
+    <div class="list-content">
+        
+        <div class="pc-only">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th width="10%">No</th>
+                        <th width="10%">申請日</th>
+                        <th width="30%">件名 / 取引先</th>
+                        <th width="10%">期限/開始</th>
+                        <th width="15%">金額</th>
+                        <th width="10%">申請者</th>
+                        <th width="15%">ステータス</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="item in filteredList" :key="item.id">
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.date }}</td>
+                        <td class="text-left">
+                            <span class="category-tag">{{ item.category }}</span>
+                            {{ item.subject }}
+                        </td>
+                        <td>{{ item.deadline }}</td>
+                        <td class="text-right">{{ formatCurrency(item.amount) }}</td>
+                        <td>{{ item.applicant }}</td>
+                        <td>
+                            <span :class="['status-label', item.statusClass]">
+                                {{ item.statusText }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr v-if="filteredList.length === 0">
+                        <td colspan="7" class="text-center">データがありません (Tidak ada data)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="sp-only">
+            <div class="card-list">
+                <div class="card-item" v-for="item in filteredList" :key="item.id">
+                    <div class="card-header">
+                        <span class="card-id">{{ item.id }}</span>
+                        <span class="category-tag">{{ item.category }}</span>
+                        <span class="card-date">{{ item.date }}</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-subject">{{ item.subject }}</div>
+                        <div class="card-info">
+                            <span><i class="fas fa-user"></i> {{ item.applicant }}</span>
+                            <span><i class="fas fa-yen-sign"></i> {{ formatCurrency(item.amount) }}</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <span :class="['status-label', item.statusClass]">
+                            {{ item.statusText }}
+                        </span>
+                    </div>
+                </div>
+                <div v-if="filteredList.length === 0" class="text-center p-3">
+                    データがありません
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script src="/js/list.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,178 @@
+/* css/list.css */
+
+/* --- SEARCH AREA --- */
+.search-area {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    border: 1px solid #e9ecef;
+}
+
+.search-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+}
+
+.search-group label {
+    font-weight: bold;
+    margin-right: 10px;
+    font-size: 13px;
+}
+
+/* --- TABS --- */
+.tab-nav {
+    display: flex;
+    border-bottom: 2px solid #ddd;
+    margin-bottom: 0;
+    overflow-x: auto; /* Scroll jika layar kecil */
+}
+
+.tab-item {
+    padding: 12px 20px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    font-weight: bold;
+    color: #666;
+    margin-bottom: -2px;
+    white-space: nowrap;
+    position: relative;
+}
+
+.tab-item:hover {
+    color: var(--primary-color);
+    background-color: #f8f9fa;
+}
+
+.tab-item.active {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+    background-color: #fff;
+    border-radius: 5px 5px 0 0;
+    border-top: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+}
+
+/* Badge untuk 'Perlu Aksi' */
+.badge {
+    background-color: #dc3545;
+    color: white;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin-left: 5px;
+    vertical-align: top;
+}
+
+/* --- TABLE (PC Only) --- */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 13px;
+}
+
+.data-table th, .data-table td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+}
+
+.data-table th {
+    background-color: #f1f3f5;
+    color: #444;
+    font-weight: bold;
+}
+
+.data-table td.text-left { text-align: left; }
+.data-table td.text-right { text-align: right; }
+
+/* Status Labels */
+.status-label {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    display: inline-block;
+    min-width: 80px;
+    text-align: center;
+}
+.status-waiting { background-color: #e2e3e5; color: #383d41; }
+.status-approved { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+.status-rejected { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+.status-action { background-color: #cce5ff; color: #004085; font-weight: bold; border: 1px solid #b8daff; }
+
+.category-tag {
+    background-color: #eee;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 11px;
+    margin-right: 5px;
+    color: #555;
+}
+
+/* --- MOBILE CARDS (SP Only) --- */
+.sp-only { display: none; }
+.pc-only { display: block; }
+
+@media screen and (max-width: 768px) {
+    .pc-only { display: none; }
+    .sp-only { display: block; }
+    
+    .list-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .btn-create {
+        padding: 8px 15px;
+        font-size: 12px;
+    }
+
+    .card-list {
+        margin-top: 15px;
+    }
+
+    .card-item {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        color: #888;
+        margin-bottom: 8px;
+    }
+
+    .card-subject {
+        font-weight: bold;
+        font-size: 15px;
+        margin-bottom: 10px;
+        line-height: 1.4;
+    }
+
+    .card-info {
+        display: flex;
+        gap: 15px;
+        font-size: 13px;
+        color: #555;
+        margin-bottom: 10px;
+    }
+
+    .card-footer {
+        border-top: 1px solid #f0f0f0;
+        padding-top: 10px;
+        text-align: right;
+    }
+}
