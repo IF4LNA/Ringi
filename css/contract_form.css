@@ -1,0 +1,219 @@
+/* css/contract_form.css */
+
+/* --- GLOBAL STYLES (Sama dengan List) --- */
+body {
+    font-family: "Meiryo", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+    background-color: #fff;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 30px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    background-color: #fff;
+}
+
+/* --- HEADERS --- */
+h1 {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    color: #000;
+    border-bottom: 3px solid #0088cc; /* Biru Tema List */
+    padding-bottom: 10px;
+}
+
+h2 {
+    font-size: 16px;
+    background-color: #0088cc; /* Header Biru Tema List */
+    color: white;
+    padding: 10px 15px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    border-radius: 2px;
+}
+
+/* --- FORM LAYOUT --- */
+.section {
+    padding: 0 5px;
+}
+
+.form-group {
+    display: flex;
+    margin-bottom: 15px;
+    align-items: flex-start;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 15px;
+}
+
+.form-group:last-child {
+    border-bottom: none;
+}
+
+.form-label {
+    width: 220px;
+    font-weight: normal; /* Sesuai List */
+    color: #333;
+    flex-shrink: 0;
+    padding-top: 8px;
+    font-size: 14px;
+}
+
+.required::after {
+    content: "必須";
+    background-color: #ff0000;
+    color: white;
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 2px;
+    margin-left: 8px;
+    vertical-align: middle;
+    font-weight: bold;
+}
+
+.form-control-wrapper {
+    flex-grow: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+/* --- INPUTS --- */
+input[type="text"],
+input[type="date"],
+input[type="number"],
+input[type="email"],
+select,
+textarea {
+    padding: 8px 10px;
+    border: 1px solid #aaa;
+    border-radius: 2px; /* Radius kotak seperti List */
+    font-size: 14px;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 400px; /* Limit lebar di PC */
+    height: 38px; /* Tinggi disamakan dengan input List */
+}
+
+textarea {
+    height: 100px;
+    max-width: 600px;
+    resize: vertical;
+    padding-top: 8px;
+}
+
+/* Input Readonly */
+input[readonly] {
+    background-color: #f5f5f5;
+    color: #666;
+    border-color: #ccc;
+}
+
+/* --- BUTTONS --- */
+.btn-area {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.btn {
+    padding: 0 30px;
+    height: 40px;
+    border: none;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s;
+}
+
+.btn-primary {
+    background-color: #0088cc; /* Biru Tema List */
+    color: white;
+}
+.btn-primary:hover { opacity: 0.9; }
+
+.btn-secondary {
+    background-color: #888;
+    color: white;
+}
+.btn-secondary:hover { opacity: 0.9; }
+
+.btn-sm {
+    height: 30px;
+    padding: 0 15px;
+    font-size: 12px;
+}
+
+/* --- MOBILE RESPONSIVE FIXES --- */
+@media screen and (max-width: 768px) {
+    body { padding: 10px; }
+    .container { padding: 15px; border: none; box-shadow: none; }
+
+    /* 1. Stack Form Group (Label di atas) */
+    .form-group {
+        display: block;
+        padding-bottom: 20px;
+    }
+    
+    .form-label {
+        width: 100%;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    /* 2. Fix Grid Keuangan (inline style override) */
+    /* Menargetkan div yang punya style grid 2 kolom */
+    div[style*="grid-template-columns: 1fr 1fr"] {
+        grid-template-columns: 1fr !important; /* Paksa jadi 1 kolom */
+        gap: 0 !important;
+    }
+    
+    /* Hapus margin/padding aneh di dalam grid mobile */
+    div[style*="grid-template-columns"] .form-group {
+        margin-bottom: 15px;
+    }
+
+    /* 3. Fix Input Widths (inline style override) */
+    /* Input Kode Pos & Telp yang punya width kecil */
+    input[style*="width: 60px"], 
+    input[style*="width: 80px"],
+    input[style*="width: 70px"] {
+        width: auto !important;
+        flex: 1; /* Biarkan mereka mengisi ruang yang ada */
+        min-width: 60px;
+    }
+    
+    /* Container Flex untuk Kode Pos/Telp di Mobile */
+    .form-control-wrapper div[style*="display: flex"] {
+        width: 100% !important;
+    }
+    
+    /* Input lainnya full width */
+    input[type="text"], input[type="number"], select {
+        max-width: 100%; 
+    }
+
+    /* 4. Tombol Full Width */
+    .btn-area {
+        flex-direction: column-reverse;
+    }
+    .btn {
+        width: 100%;
+    }
+}

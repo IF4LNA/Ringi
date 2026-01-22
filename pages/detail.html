@@ -1,166 +1,178 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>稟議詳細 | 稟議書管理システム</title>
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        /* Style Tambahan Khusus Halaman Detail */
-        .approval-route-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-        .approval-route-table th, .approval-route-table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: center;
-        }
-        .approval-route-table th {
-            background-color: #f8f9fa;
-            font-weight: bold;
-        }
-        
-        /* Area Stempel/Watermark */
-        .stamp-container {
-            position: relative; /* Agar stempel absolute posisinya relatif ke sini */
-        }
-    </style>
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/css/detail.css" />
+  </head>
+  <body>
+    <div id="app" class="container">
+      <div
+        style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 20px;
+        "
+      >
+        <a
+          href="list.html"
+          style="text-decoration: none; color: #0088cc; font-size: 14px"
+        >
+          <i class="fas fa-arrow-left"></i> 一覧に戻る
+        </a>
 
-<div id="app" class="container stamp-container">
-    
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <a href="list.html" class="btn-secondary btn-sm" style="text-decoration: none;">&lt; 一覧に戻る (Kembali)</a>
-        
-        <select v-model="currentUserRole" style="width: auto;">
-            <option value="applicant">Role: 申請者 (Pemohon)</option>
-            <option value="approver">Role: 承認者 (Penyetuju)</option>
+        <select
+          v-model="currentUserRole"
+          style="padding: 5px; border-radius: 3px; border: 1px solid #ccc"
+        >
+          <option value="applicant">Role: 申請者</option>
+          <option value="approver">Role: 承認者</option>
         </select>
-    </div>
+      </div>
 
-    <div v-if="form.status === 1" class="stamp stamp-approved"></div>
-    <div v-if="form.status === 2" class="stamp stamp-rejected"></div>
+      <div v-if="form.status === 1" class="stamp stamp-approved"></div>
+      <div v-if="form.status === 2" class="stamp stamp-rejected"></div>
 
-    <h1>稟議書詳細 (Detail Dokumen): {{ form.doc_no }}</h1>
+      <h1>稟議書詳細: {{ form.doc_no }}</h1>
 
-    <form>
+      <form>
         <div class="section">
-            <div class="form-group">
-                <label class="form-label">件名 (Subjek)</label>
-                <div class="form-control-wrapper">
-                    <input type="text" v-model="form.subject" readonly style="background-color: #f9f9f9; border: none;">
-                </div>
+          <div class="form-group">
+            <label class="form-label">件名</label>
+            <div class="form-control-wrapper">
+              <input type="text" v-model="form.subject" readonly />
             </div>
+          </div>
 
-            <div class="form-group">
-                <label class="form-label">申請者 (Pemohon)</label>
-                <div class="form-control-wrapper">
-                    <span>{{ form.applicant_name }}</span>
-                </div>
+          <div class="form-group">
+            <label class="form-label">申請者</label>
+            <div class="form-control-wrapper">
+              <span>{{ form.applicant_name }}</span>
             </div>
+          </div>
 
-            <div class="form-group">
-                <label class="form-label">申請日 (Tanggal)</label>
-                <div class="form-control-wrapper">
-                    <span>{{ form.applied_date }}</span>
-                </div>
+          <div class="form-group">
+            <label class="form-label">申請日</label>
+            <div class="form-control-wrapper">
+              <span>{{ form.applied_date }}</span>
             </div>
+          </div>
         </div>
 
-        <h2>契約内容 (Isi Kontrak)</h2>
+        <h2>契約内容</h2>
         <div class="section">
-            <div class="form-group">
-                <label class="form-label">取引先 (Mitra)</label>
-                <div class="form-control-wrapper">
-                    <input type="text" v-model="form.company_name" readonly>
-                </div>
+          <div class="form-group">
+            <label class="form-label">取引先</label>
+            <div class="form-control-wrapper">
+              <input type="text" v-model="form.company_name" readonly />
             </div>
+          </div>
 
-            <div class="form-group">
-                <label class="form-label">金額 (Total)</label>
-                <div class="form-control-wrapper">
-                    <strong>{{ form.amount }} 円</strong>
-                </div>
+          <div class="form-group">
+            <label class="form-label">金額</label>
+            <div class="form-control-wrapper">
+              <strong style="font-size: 18px">{{ form.amount }} 円</strong>
             </div>
+          </div>
 
-            <div class="form-group">
-                <label class="form-label">概要 (Ringkasan)</label>
-                <div class="form-control-wrapper">
-                    <textarea v-model="form.contract_overview" readonly style="background-color: #f9f9f9;"></textarea>
-                </div>
+          <div class="form-group">
+            <label class="form-label">概要</label>
+            <div class="form-control-wrapper">
+              <textarea v-model="form.contract_overview" readonly></textarea>
             </div>
-            
-             <div class="form-group">
-                <label class="form-label">添付書類 (Lampiran)</label>
-                <div class="form-control-wrapper">
-                    <a href="#" class="btn-sm btn-secondary" style="text-decoration: none;">
-                        <i class="fas fa-file-pdf"></i> 見積書.pdf
-                    </a>
-                </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">添付書類</label>
+            <div class="form-control-wrapper">
+              <a href="#" class="btn btn-secondary btn-sm">
+                <i class="fas fa-file-pdf"></i> 見積書.pdf
+              </a>
             </div>
+          </div>
         </div>
 
-        <h2>承認ルート (Status Persetujuan)</h2>
+        <h2>承認ルート</h2>
         <div class="section">
-            <table class="approval-route-table">
-                <thead>
-                    <tr>
-                        <th>Step</th>
-                        <th>Peran</th>
-                        <th>Nama</th>
-                        <th>Tanggal/Jam</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(step, index) in approvalRoute" :key="index">
-                        <td>{{ index + 1 }}</td>
-                        <td>{{ step.role }}</td>
-                        <td>{{ step.name }}</td>
-                        <td>{{ step.date || '-' }}</td>
-                        <td :style="{ color: step.statusColor, fontWeight: 'bold' }">
-                            {{ step.statusText }}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+          <table class="approval-table">
+            <thead>
+              <tr>
+                <th width="10%">Step</th>
+                <th width="20%">Role</th>
+                <th width="25%">Name</th>
+                <th width="25%">Date</th>
+                <th width="20%">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(step, index) in approvalRoute" :key="index">
+                <td>{{ index + 1 }}</td>
+                <td>{{ step.role }}</td>
+                <td>{{ step.name }}</td>
+                <td>{{ step.date || '-' }}</td>
+                <td>
+                  <span
+                    :style="{ color: step.statusColor, fontWeight: 'bold' }"
+                  >
+                    {{ step.statusText }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
         <div class="btn-area" v-if="form.status === 0">
-            
-            <div v-if="currentUserRole === 'approver'" style="display: flex; gap: 10px; width: 100%; justify-content: center;">
-                <button type="button" class="btn btn-secondary" style="background-color: #dc3545;" @click="doReject">
-                    <i class="fas fa-times"></i> 否認 (Reject)
-                </button>
-                <button type="button" class="btn btn-secondary" @click="doRemand">
-                    <i class="fas fa-undo"></i> 差戻し (Remand)
-                </button>
-                <button type="button" class="btn btn-primary" @click="doApprove">
-                    <i class="fas fa-check"></i> 承認 (Approve)
-                </button>
-            </div>
+          <div
+            v-if="currentUserRole === 'approver'"
+            style="
+              display: flex;
+              gap: 10px;
+              width: 100%;
+              justify-content: center;
+            "
+          >
+            <button type="button" class="btn btn-danger" @click="doReject">
+              <i class="fas fa-times"></i> 否認 (Reject)
+            </button>
+            <button type="button" class="btn btn-secondary" @click="doRemand">
+              <i class="fas fa-undo"></i> 差戻し (Remand)
+            </button>
+            <button type="button" class="btn btn-primary" @click="doApprove">
+              <i class="fas fa-check"></i> 承認 (Approve)
+            </button>
+          </div>
 
-            <div v-if="currentUserRole === 'applicant'" style="display: flex; gap: 10px; width: 100%; justify-content: center;">
-                <button type="button" class="btn btn-secondary" @click="doWithdraw">
-                    <i class="fas fa-trash"></i> 取下げ (Withdraw)
-                </button>
-            </div>
-
+          <div
+            v-if="currentUserRole === 'applicant'"
+            style="
+              display: flex;
+              gap: 10px;
+              width: 100%;
+              justify-content: center;
+            "
+          >
+            <button type="button" class="btn btn-secondary" @click="doWithdraw">
+              <i class="fas fa-trash"></i> 取下げ (Withdraw)
+            </button>
+          </div>
         </div>
 
         <div class="btn-area" v-else>
-            <p style="font-weight: bold; color: #666;">この稟議書は処理済みです (Dokumen ini sudah diproses)</p>
+          <p style="font-weight: bold; color: #888">
+            <i class="fas fa-info-circle"></i> この稟議書は処理済みです
+          </p>
         </div>
+      </form>
+    </div>
 
-    </form>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-<script src="js/detail.js"></script>
-
-</body>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="/js/detail.js"></script>
+  </body>
 </html>
