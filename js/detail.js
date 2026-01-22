@@ -20,58 +20,58 @@ var app = new Vue({
 
         // Data Approval Route (Siapa saja yang harus approve)
         approvalRoute: [
-            { role: '上長 (Atasan)', name: '佐藤 健', date: '2025-12-10 14:00', statusText: '承認 (Approved)', statusColor: 'green' },
-            { role: '経理 (Keuangan)', name: '鈴木 一郎', date: null, statusText: '未承認 (Pending)', statusColor: '#999' },
-            { role: '社長 (Direktur)', name: '高橋 大輔', date: null, statusText: '-', statusColor: '#ccc' }
+            { role: '上長', name: '佐藤 健', date: '2025-12-10 14:00', statusText: '承認 (Approved)', statusColor: 'green' },
+            { role: '経理', name: '鈴木 一郎', date: null, statusText: '未承認 (Pending)', statusColor: '#999' },
+            { role: '社長', name: '高橋 大輔', date: null, statusText: '-', statusColor: '#ccc' }
         ]
     },
 
     methods: {
         // Aksi APPROVE
         doApprove: function() {
-            if(!confirm('本当に承認しますか？ (Apakah Anda yakin menyetujui?)')) return;
+            if(!confirm('本当に承認しますか？')) return;
 
             // Simulasi Update Status
             this.form.status = 1; // Ubah jadi Approved
             
             // Update tabel route (Baris ke-2 yaitu user ini)
             this.approvalRoute[1].date = new Date().toLocaleString('ja-JP');
-            this.approvalRoute[1].statusText = '承認 (Approved)';
+            this.approvalRoute[1].statusText = '承認';
             this.approvalRoute[1].statusColor = 'green';
 
-            alert('承認しました (Disetujui)');
+            alert('承認しました');
         },
 
         // Aksi REJECT
         doReject: function() {
-            let reason = prompt('否認理由を入力してください (Masukkan alasan penolakan):');
+            let reason = prompt('否認理由を入力してください:');
             if (reason === null) return; // Cancel
 
             this.form.status = 2; // Ubah jadi Rejected
             
             this.approvalRoute[1].date = new Date().toLocaleString('ja-JP');
-            this.approvalRoute[1].statusText = '否認 (Rejected)';
+            this.approvalRoute[1].statusText = '否認';
             this.approvalRoute[1].statusColor = 'red';
 
-            alert('否認しました (Ditolak)');
+            alert('否認しました');
         },
 
         // Aksi REMAND (Kembalikan ke pemohon)
         doRemand: function() {
-            let reason = prompt('差戻し理由を入力してください (Masukkan alasan pengembalian):');
+            let reason = prompt('差戻し理由を入力してください:');
             if (reason === null) return;
 
-            alert('申請者に差戻しました (Dikembalikan ke pemohon)');
+            alert('申請者に差戻しました');
             // Biasanya status kembali ke Draft atau status khusus Remand
             location.href = 'list.html';
         },
 
         // Aksi WITHDRAW (Tarik Kembali oleh Pemohon)
         doWithdraw: function() {
-            if(!confirm('申請を取り下げますか？ (Tarik kembali pengajuan?)')) return;
+            if(!confirm('申請を取り下げますか？')) return;
 
             this.form.status = 3; // Withdrawn status
-            alert('取下げました (Ditarik)');
+            alert('取下げました');
         }
     }
 });

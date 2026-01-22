@@ -4,91 +4,99 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>申請書一覧 | 稟議書管理システム</title>
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/list.css"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/list.css">
 </head>
 <body>
 
-<div id="app" class="container list-container">
+<div id="app" class="list-wrapper">
     
-    <div class="list-header">
-        <h1>申請書一覧 (Daftar Pengajuan)</h1>
-        <a href="contract_form.html" class="btn btn-primary btn-create">
-            <i class="fas fa-plus"></i> 新規作成
-        </a>
-    </div>
+    <h1 class="page-title">申請書一覧</h1>
 
-    <div class="search-area">
-        <div class="search-row">
-            <div class="search-group">
-                <label>稟議種別:</label>
-                <label><input type="radio" value="all" v-model="filters.type"> すべて</label>
-                <label><input type="radio" value="common" v-model="filters.type"> 通常稟議</label>
-                <label><input type="radio" value="contract" v-model="filters.type"> 契約稟議</label>
+    <div class="search-container">
+        <div class="search-form">
+            
+            <div class="form-item">
+                <label>日付</label>
+                <input type="date" v-model="filters.date_start" class="input-date">
+                <span class="tilde">～</span>
+                <input type="date" v-model="filters.date_end" class="input-date">
             </div>
-            <div class="search-group">
-                <label>キーワード:</label>
-                <input type="text" v-model="filters.keyword" placeholder="件名・取引先名">
+
+            <div class="form-item">
+                <label>申請書</label>
+                <select v-model="filters.form_type" class="input-select">
+                    <option value="">(すべて)</option>
+                    <option value="holiday">休日出勤申請</option>
+                    <option value="contract">契約稟議</option>
+                </select>
             </div>
-            <div class="search-group">
-                <button class="btn btn-secondary btn-sm" @click="resetFilters">クリア</button>
+
+            <div class="form-item">
+                <input type="text" v-model="filters.keyword" class="input-text" placeholder="検索語 部分一致">
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-blue" @click="doSearch">
+                    <i class="fas fa-search"></i> 検索
+                </button>
+                <a href="contract_form.html" class="btn btn-blue">
+                    <i class="fas fa-plus"></i> 新規作成
+                </a>
             </div>
         </div>
     </div>
 
-    <div class="tab-nav">
+    <div class="tab-container">
         <button :class="['tab-item', { active: currentTab === 'all' }]" @click="currentTab = 'all'">
-            すべて (Semua)
+            すべて
         </button>
         <button :class="['tab-item', { active: currentTab === 'waiting' }]" @click="currentTab = 'waiting'">
-            承認待ち (Menunggu)
+            承認待ち
         </button>
         <button :class="['tab-item', { active: currentTab === 'approved' }]" @click="currentTab = 'approved'">
-            承認済み (Disetujui)
+            承認済み
         </button>
         <button :class="['tab-item', { active: currentTab === 'rejected' }]" @click="currentTab = 'rejected'">
             否認・取下
         </button>
         <button :class="['tab-item', { active: currentTab === 'action_needed' }]" @click="currentTab = 'action_needed'">
-            要承認 (Perlu Aksi)
+            要承認
             <span class="badge" v-if="pendingCount > 0">{{ pendingCount }}</span>
         </button>
     </div>
 
-    <div class="list-content">
+    <div class="table-container">
         
         <div class="pc-only">
-            <table class="data-table">
+            <table class="custom-table">
                 <thead>
                     <tr>
-                        <th width="10%">No</th>
-                        <th width="10%">申請日</th>
-                        <th width="30%">件名 / 取引先</th>
-                        <th width="10%">期限/開始</th>
-                        <th width="15%">金額</th>
-                        <th width="10%">申請者</th>
-                        <th width="15%">ステータス</th>
+                        <th width="12%">文書No</th>
+                        <th width="15%">申請書</th>
+                        <th width="15%">氏名</th>
+                        <th width="12%">申請日</th>
+                        <th width="30%">題名</th>
+                        <th width="10%">ステータス</th>
+                        <th width="6%">実績</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="item in filteredList" :key="item.id">
                         <td>{{ item.id }}</td>
-                        <td>{{ item.date }}</td>
-                        <td class="text-left">
-                            <span class="category-tag">{{ item.category }}</span>
-                            {{ item.subject }}
-                        </td>
-                        <td>{{ item.deadline }}</td>
-                        <td class="text-right">{{ formatCurrency(item.amount) }}</td>
+                        <td>{{ item.form_name }}</td>
                         <td>{{ item.applicant }}</td>
+                        <td>{{ item.date }}</td>
+                        <td>{{ item.subject }}</td>
                         <td>
-                            <span :class="['status-label', item.statusClass]">
-                                {{ item.statusText }}
-                            </span>
+                             {{ item.statusText }}
+                        </td>
+                        <td class="text-center">
+                            <i class="far fa-file-alt icon-doc"></i>
                         </td>
                     </tr>
                     <tr v-if="filteredList.length === 0">
-                        <td colspan="7" class="text-center">データがありません (Tidak ada data)</td>
+                        <td colspan="7" class="text-center" style="padding: 20px;">データがありません</td>
                     </tr>
                 </tbody>
             </table>
@@ -99,24 +107,18 @@
                 <div class="card-item" v-for="item in filteredList" :key="item.id">
                     <div class="card-header">
                         <span class="card-id">{{ item.id }}</span>
-                        <span class="category-tag">{{ item.category }}</span>
                         <span class="card-date">{{ item.date }}</span>
                     </div>
                     <div class="card-body">
+                        <div class="card-title">{{ item.form_name }}</div>
                         <div class="card-subject">{{ item.subject }}</div>
                         <div class="card-info">
-                            <span><i class="fas fa-user"></i> {{ item.applicant }}</span>
-                            <span><i class="fas fa-yen-sign"></i> {{ formatCurrency(item.amount) }}</span>
+                            <i class="fas fa-user"></i> {{ item.applicant }}
                         </div>
                     </div>
                     <div class="card-footer">
-                        <span :class="['status-label', item.statusClass]">
-                            {{ item.statusText }}
-                        </span>
+                        <span>{{ item.statusText }}</span>
                     </div>
-                </div>
-                <div v-if="filteredList.length === 0" class="text-center p-3">
-                    データがありません
                 </div>
             </div>
         </div>
