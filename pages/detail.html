@@ -100,31 +100,28 @@
 
         <h2>承認ルート</h2>
         <div class="section">
-          <table class="approval-table">
-            <thead>
-<tr>
-    <th width="10%">No</th> <th width="20%">役職</th>
-    <th width="25%">承認者名</th>
-    <th width="25%">承認日時</th>
-    <th width="20%">結果</th>
-  </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(step, index) in approvalRoute" :key="index">
-                <td>{{ index + 1 }}</td>
-                <td>{{ step.role }}</td>
-                <td>{{ step.name }}</td>
-                <td>{{ step.date || '-' }}</td>
-                <td>
-                  <span
-                    :style="{ color: step.statusColor, fontWeight: 'bold' }"
-                  >
-                    {{ step.statusText }}
-                  </span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+            <table class="approval-route-table">
+                <thead>
+                    <tr>
+                        <th>Step</th>
+                        <th>Peran</th>
+                        <th>Nama</th>
+                        <th>Tanggal/Jam</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(step, index) in approvalRoute" :key="index">
+                        <td>{{ index + 1 }}</td>
+                        <td>{{ step.role }}</td>
+                        <td>{{ step.name }}</td>
+                        <td>{{ step.date || '-' }}</td>
+                        <td :style="{ color: step.statusColor, fontWeight: 'bold' }">
+                            {{ step.statusText }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
         <div class="btn-area" v-if="form.status === 0">
