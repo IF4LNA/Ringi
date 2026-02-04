@@ -1,0 +1,227 @@
+/* css/common_form.css - FULL VERSION */
+
+/* --- 1. GAYA DASAR (Copied from contract_form.css) --- */
+body {
+    font-family: "Meiryo", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+    background-color: #fff;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 30px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    background-color: #fff;
+}
+
+/* --- HEADERS --- */
+h1 {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    color: #000;
+    border-bottom: 3px solid #0088cc;
+    padding-bottom: 10px;
+}
+
+h2 {
+    font-size: 16px;
+    background-color: #0088cc;
+    color: white;
+    padding: 10px 15px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    border-radius: 2px;
+}
+
+/* --- FORM LAYOUT --- */
+.section { padding: 0 5px; }
+
+.form-group {
+    display: flex;
+    margin-bottom: 15px;
+    align-items: flex-start;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 15px;
+}
+.form-group:last-child { border-bottom: none; }
+
+.form-label {
+    width: 220px;
+    font-weight: normal;
+    color: #333;
+    flex-shrink: 0;
+    padding-top: 8px;
+    font-size: 14px;
+}
+
+.required::after {
+    content: "必須";
+    background-color: #ff0000;
+    color: white;
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 2px;
+    margin-left: 8px;
+    vertical-align: middle;
+    font-weight: bold;
+}
+
+.form-control-wrapper {
+    flex-grow: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+/* --- INPUTS --- */
+input[type="text"], input[type="date"], input[type="number"], 
+input[type="email"], select, textarea {
+    padding: 8px 10px;
+    border: 1px solid #aaa;
+    border-radius: 2px;
+    font-size: 14px;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 400px;
+    height: 38px;
+}
+
+textarea {
+    height: 100px;
+    max-width: 600px;
+    resize: vertical;
+    padding-top: 8px;
+}
+
+input[readonly] {
+    background-color: #f5f5f5;
+    color: #666;
+    border-color: #ccc;
+}
+
+/* --- BUTTONS --- */
+.btn-area {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.btn {
+    padding: 0 30px;
+    height: 40px;
+    border: none;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s;
+}
+
+.btn-primary { background-color: #0088cc; color: white; }
+.btn-secondary { background-color: #888; color: white; }
+.btn:hover { opacity: 0.9; }
+
+/* --- 2. GAYA KHUSUS COMMON FORM (TABEL RINCIAN) --- */
+.detail-table-wrapper {
+    margin-top: 10px;
+    width: 100%;
+    overflow-x: auto; /* Scroll jika tabel terlalu lebar di HP */
+}
+
+.detail-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    min-width: 600px; /* Lebar minimum agar tidak gepeng di HP */
+}
+
+.detail-table th {
+    background-color: #f2f2f2;
+    padding: 10px;
+    border: 1px solid #ddd;
+    font-weight: normal;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.detail-table td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    vertical-align: top;
+    background-color: #fff;
+}
+
+/* Reset style input di dalam tabel agar full width cell */
+.detail-table select, 
+.detail-table input {
+    width: 100%;
+    max-width: 100%; /* Override limit 400px dari global */
+    border: 1px solid #ccc;
+    padding: 6px;
+    height: 34px;
+}
+
+.btn-add-row {
+    margin-top: 10px;
+    background-color: #f8f9fa;
+    border: 1px dashed #0088cc;
+    color: #0088cc;
+    width: 100%;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+.btn-add-row:hover {
+    background-color: #e6f7ff;
+}
+
+.btn-icon-delete {
+    background: none;
+    border: none;
+    color: #dc3545;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 5px;
+    margin-top: 2px;
+}
+.btn-icon-delete:hover {
+    color: #a71d2a;
+}
+
+/* --- MOBILE RESPONSIVE --- */
+@media screen and (max-width: 768px) {
+    body { padding: 10px; }
+    .container { padding: 15px; border: none; box-shadow: none; }
+
+    .form-group {
+        display: block;
+        padding-bottom: 20px;
+    }
+    .form-label {
+        width: 100%;
+        margin-bottom: 8px;
+        display: block;
+    }
+    
+    input[type="text"], select, textarea { max-width: 100%; }
+    
+    .btn-area { flex-direction: column-reverse; }
+    .btn { width: 100%; }
+}

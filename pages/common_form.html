@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>通常稟議申請 | 稟議書管理システム</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/common_form.css">
+</head>
+<body>
+
+<div id="app" class="container">
+    <div style="margin-bottom: 20px;">
+        <a href="list.html" style="text-decoration: none; color: #0088cc; font-size: 14px;">
+            <i class="fas fa-arrow-left"></i> 一覧に戻る
+        </a>
+    </div>
+
+    <h1>新規稟議申請 (通常稟議)</h1>
+
+    <form @submit.prevent="submitForm">
+        
+        <div class="section">
+            <div class="form-group">
+                <label class="form-label required">稟議書種別</label>
+                <div class="form-control-wrapper">
+                    <label><input type="radio" name="doc_type" value="common" checked> 通常稟議</label>
+                    <label style="margin-left: 15px;"><input type="radio" name="doc_type" value="contract" onclick="location.href='contract_form.html'"> 契約稟議</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label required">件名</label>
+                <div class="form-control-wrapper">
+                    <input type="text" v-model="form.subject" placeholder="例：PCモニター購入の件">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label required">申請日</label>
+                <div class="form-control-wrapper">
+                    <input type="date" v-model="form.applied_date" readonly>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label required">実施(決済)期限</label>
+                <div class="form-control-wrapper">
+                    <input type="date" v-model="form.deadline">
+                </div>
+            </div>
+        </div>
+
+        <h2>稟議内容・金額</h2>
+        <div class="section">
+            <div class="form-group">
+                <label class="form-label required">概要・理由</label>
+                <div class="form-control-wrapper">
+                    <textarea v-model="form.overview" placeholder="品名、金額の内訳等の詳細や申請理由を記入"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">金額(総額)</label>
+                <div class="form-control-wrapper">
+                    <strong style="font-size: 18px;">{{ formattedTotalAmount }} 円</strong>
+                </div>
+            </div>
+
+            <div class="detail-table-wrapper">
+                <table class="detail-table">
+                    <thead>
+                        <tr>
+                            <th width="30%">分類 (Kategori)</th>
+                            <th width="40%">支払先 (Pembayar/Toko)</th>
+                            <th width="25%">金額 (Nominal)</th>
+                            <th width="5%"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(item, index) in form.details" :key="index">
+                            <td>
+                                <select v-model="item.category_id">
+                                    <option value="">(選択)</option>
+                                    <option v-for="cat in categories" :value="cat.id">{{ cat.name }}</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" v-model="item.payer" placeholder="支払先">
+                            </td>
+                            <td>
+                                <input type="text" v-model="item.amount" @input="formatDetailAmount(index, $event)" placeholder="0">
+                            </td>
+                            <td class="text-center">
+                                <button type="button" class="btn-icon-delete" @click="removeRow(index)" v-if="form.details.length > 1">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="button" class="btn-add-row" @click="addRow">
+                    <i class="fas fa-plus"></i> 明細を追加 (Tambah Baris)
+                </button>
+            </div>
+        </div>
+
+        <h2>添付書類</h2>
+        <div class="section">
+            <div class="form-group">
+                <label class="form-label">ファイル (PDF)</label>
+                <div class="form-control-wrapper">
+                    <input type="file" accept=".pdf" @change="handleFileUpload">
+                    <p style="font-size: 12px; color: #666; margin-top: 5px;">
+                        ※ 収支予算書、見積書、パンフレット等
+                    </p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">備考</label>
+                <div class="form-control-wrapper">
+                    <textarea v-model="form.memo" style="height: 60px;"></textarea>
+                </div>
+            </div>
+        </div>
+        
+        <div class="btn-area">
+            <button type="button" class="btn btn-secondary">下書き保存</button>
+            <button type="submit" class="btn btn-primary">申請する</button>
+        </div>
+
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script src="/js/common_form.js"></script>
+
+</body>
+</html>

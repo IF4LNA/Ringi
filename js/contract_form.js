@@ -42,19 +42,35 @@ var app = new Vue({
             rep_tel: '',
             rep_tel_none: false,
 
-            // --- KEUANGAN ---
+            // --- KEUANGAN DASAR ---
             fin_assets: '',
             fin_sales: '',
             fin_profit: '',
             fin_workers: '',
+            
+            // --- KEUANGAN TAMBAHAN (Tax Only) ---
+            fin_debt: '',           // Hutang
+            trade_type: '0',        // Perdagangan
+            affiliated_company: '0',// Afiliasi
+
+            // --- AKUNTANSI DETAIL (Tax Only) ---
             consumption_tax: '1', 
+            self_accounting: '1',   
+            book_keeping: [],       
             accounting_soft: '1', 
+            slip_count: '',         
+            accounting_staff: '1',  
 
             // --- KONTRAK ---
             contract_type: '1', 
             fee_accounting: '',
             fee_tax: '',
             start_date: '',
+            
+            // --- INFO TAMBAHAN KONTRAK (Tax Only) ---
+            pic_client: '',         
+            introducer: '',         
+            introducer_type: '0',   
             background: '',
 
             // --- FILES ---
@@ -66,6 +82,10 @@ var app = new Vue({
     computed: {
         isCorporate: function() {
             return this.form.corp_type === '1';
+        },
+        // [TAMBAHAN] Cek apakah kategori = Pajak
+        isTaxContract: function() {
+            return this.form.contract_category === 'tax';
         }
     },
 
@@ -97,7 +117,11 @@ var app = new Vue({
         submitForm: function() {
             if (!this.form.subject) return alert('件名 (Subjek) Wajib diisi');
             if (!this.form.company_name) return alert('商号 (Nama Perusahaan) Wajib diisi');
-            if (!this.form.tax_office_name) return alert('管轄税務署 (Kantor Pajak) Wajib diisi');
+            
+            // Validasi khusus Pajak
+            if (this.isTaxContract && !this.form.tax_office_name) {
+                return alert('管轄税務署 (Kantor Pajak) Wajib diisi untuk Kontrak Pajak');
+            }
 
             this.isSubmitting = true;
             
