@@ -5,6 +5,7 @@ var app = new Vue({
     data: {
         form: {
             doc_type: 'common',
+            business_type: '1', 
             subject: '',
             applied_date: new Date().toISOString().slice(0, 10),
             deadline: '',
@@ -16,7 +17,7 @@ var app = new Vue({
             ],
             file_attachment: null
         },
-        // Data Master Kategori (Sesuai Spec Hal 11)
+        // Data Master Kategori
         categories: [
             { id: 1, name: '書籍購入' },
             { id: 2, name: '物品購入' },
@@ -28,13 +29,13 @@ var app = new Vue({
             { id: 8, name: '広告協賛' },
             { id: 9, name: '外注' }
         ],
+        errors: {}, // Store errors
         isSubmitting: false
     },
     computed: {
         // Hitung Total Otomatis
         formattedTotalAmount: function() {
             let total = this.form.details.reduce((sum, item) => {
-                // Hapus koma sebelum menjumlahkan
                 let val = parseInt(String(item.amount).replace(/[^0-9]/g, '')) || 0;
                 return sum + val;
             }, 0);
@@ -42,7 +43,6 @@ var app = new Vue({
         }
     },
     methods: {
-        // Format input uang per baris
         formatDetailAmount: function(index, event) {
             let val = event.target.value.replace(/[^0-9]/g, '');
             if(val) {
@@ -51,11 +51,9 @@ var app = new Vue({
                 this.form.details[index].amount = '';
             }
         },
-        // Tambah Baris
         addRow: function() {
             this.form.details.push({ category_id: '', payer: '', amount: '' });
         },
-        // Hapus Baris
         removeRow: function(index) {
             this.form.details.splice(index, 1);
         },
@@ -63,12 +61,34 @@ var app = new Vue({
             this.form.file_attachment = event.target.files[0];
         },
         submitForm: function() {
-            if (!this.form.subject) return alert('件名 (Subject) Wajib diisi');
-            if (!this.form.overview) return alert('概要 (Overview) Wajib diisi');
+            // 1. Reset
+            this.errors = {};
+            let hasError = false;
+
+            // 2. Validasi
+            if (!this.form.subject) {
+                this.$set(this.errors, 'subject', true);
+                hasError = true;
+            }
+            if (!this.form.deadline) {
+                this.$set(this.errors, 'deadline', true);
+                hasError = true;
+            }
+            if (!this.form.overview) {
+                this.$set(this.errors, 'overview', true);
+                hasError = true;
+            }
+
+            // 3. Stop jika error
+            if (hasError) {
+                window.scrollTo(0, 0);
+                return;
+            }
             
+            // 4. Submit
             this.isSubmitting = true;
             console.log("SENDING COMMON RINGI:", JSON.parse(JSON.stringify(this.form)));
-            alert("Validasi OK. Data siap dikirim.");
+            alert("Validasi OK. Data siap dikirim ke server.");
             this.isSubmitting = false;
         }
     }

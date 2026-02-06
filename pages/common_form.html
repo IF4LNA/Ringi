@@ -18,11 +18,15 @@
 
     <h1>新規稟議申請 (通常稟議)</h1>
 
+    <div v-if="Object.keys(errors).length > 0" style="background: #ffe6e6; color: #d00; padding: 10px; border-radius: 4px; margin-bottom: 20px; border: 1px solid #ffcccc;">
+        <i class="fas fa-exclamation-triangle"></i> 入力エラーがあります。
+    </div>
+
     <form @submit.prevent="submitForm">
         
         <div class="section">
             <div class="form-group">
-                <label class="form-label required">稟議書種別</label>
+                <label class="form-label">稟議書種別</label>
                 <div class="form-control-wrapper">
                     <label><input type="radio" name="doc_type" value="common" checked> 通常稟議</label>
                     <label style="margin-left: 15px;"><input type="radio" name="doc_type" value="contract" onclick="location.href='contract_form.html'"> 契約稟議</label>
@@ -30,23 +34,33 @@
             </div>
 
             <div class="form-group">
-                <label class="form-label required">件名</label>
+                <label class="form-label">業務区分 (Klasifikasi)</label>
                 <div class="form-control-wrapper">
-                    <input type="text" v-model="form.subject" placeholder="例：PCモニター購入の件">
+                    <label><input type="radio" value="1" v-model="form.business_type"> 部課 (Departemen)</label>
+                    <label style="margin-left: 15px;"><input type="radio" value="2" v-model="form.business_type"> 委員会 (Komite)</label>
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="form-label required">申請日</label>
+                <label class="form-label" :class="{'label-error': errors.subject}">件名</label>
+                <div class="form-control-wrapper">
+                    <input type="text" v-model="form.subject" :class="{'input-error': errors.subject}" placeholder="例：PCモニター購入の件">
+                    <span v-if="errors.subject" class="error-msg">件名を入力してください</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">申請日</label>
                 <div class="form-control-wrapper">
                     <input type="date" v-model="form.applied_date" readonly>
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="form-label required">実施(決済)期限</label>
+                <label class="form-label" :class="{'label-error': errors.deadline}">実施(決済)期限</label>
                 <div class="form-control-wrapper">
-                    <input type="date" v-model="form.deadline">
+                    <input type="date" v-model="form.deadline" :class="{'input-error': errors.deadline}">
+                    <span v-if="errors.deadline" class="error-msg">期限を入力してください</span>
                 </div>
             </div>
         </div>
@@ -54,9 +68,10 @@
         <h2>稟議内容・金額</h2>
         <div class="section">
             <div class="form-group">
-                <label class="form-label required">概要・理由</label>
+                <label class="form-label" :class="{'label-error': errors.overview}">概要・理由</label>
                 <div class="form-control-wrapper">
-                    <textarea v-model="form.overview" placeholder="品名、金額の内訳等の詳細や申請理由を記入"></textarea>
+                    <textarea v-model="form.overview" :class="{'input-error': errors.overview}" placeholder="品名、金額の内訳等の詳細や申請理由を記入"></textarea>
+                    <span v-if="errors.overview" class="error-msg">概要を入力してください</span>
                 </div>
             </div>
 

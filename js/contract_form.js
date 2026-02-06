@@ -49,9 +49,9 @@ var app = new Vue({
             fin_workers: '',
             
             // --- KEUANGAN TAMBAHAN (Tax Only) ---
-            fin_debt: '',           // Hutang
-            trade_type: '0',        // Perdagangan
-            affiliated_company: '0',// Afiliasi
+            fin_debt: '',           
+            trade_type: '0',        
+            affiliated_company: '0',
 
             // --- AKUNTANSI DETAIL (Tax Only) ---
             consumption_tax: '1', 
@@ -76,6 +76,7 @@ var app = new Vue({
             // --- FILES ---
             file_estimate: null
         },
+        errors: {}, // Objek untuk menyimpan status error
         isSubmitting: false
     },
 
@@ -83,7 +84,6 @@ var app = new Vue({
         isCorporate: function() {
             return this.form.corp_type === '1';
         },
-        // [TAMBAHAN] Cek apakah kategori = Pajak
         isTaxContract: function() {
             return this.form.contract_category === 'tax';
         }
@@ -115,19 +115,46 @@ var app = new Vue({
         },
 
         submitForm: function() {
-            if (!this.form.subject) return alert('件名 (Subjek) Wajib diisi');
-            if (!this.form.company_name) return alert('商号 (Nama Perusahaan) Wajib diisi');
-            
-            // Validasi khusus Pajak
-            if (this.isTaxContract && !this.form.tax_office_name) {
-                return alert('管轄税務署 (Kantor Pajak) Wajib diisi untuk Kontrak Pajak');
+            // 1. Reset Error
+            this.errors = {};
+            let hasError = false;
+
+            // 2. Validasi Field Wajib
+            if (!this.form.subject) {
+                this.$set(this.errors, 'subject', true);
+                hasError = true;
+            }
+            if (!this.form.company_name) {
+                this.$set(this.errors, 'company_name', true);
+                hasError = true;
+            }
+            if (!this.form.rep_name) {
+                this.$set(this.errors, 'rep_name', true);
+                hasError = true;
+            }
+            if (!this.form.start_date) {
+                this.$set(this.errors, 'start_date', true);
+                hasError = true;
             }
 
+            // Validasi Khusus Pajak
+            if (this.isTaxContract) {
+                if (!this.form.tax_office_name) {
+                    this.$set(this.errors, 'tax_office_name', true);
+                    hasError = true;
+                }
+            }
+
+            // 3. Jika Error, Stop & Scroll ke Atas
+            if (hasError) {
+                window.scrollTo(0, 0);
+                return;
+            }
+
+            // 4. Jika Sukses
             this.isSubmitting = true;
-            
             console.log("SENDING DATA:", JSON.parse(JSON.stringify(this.form)));
             alert("Validasi OK. Data siap dikirim ke server.");
-            
             this.isSubmitting = false;
         }
     }

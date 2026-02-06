@@ -1,14 +1,16 @@
+/* js/list.js */
+
 var app = new Vue({
   el: "#app",
   data: {
     currentTab: "all",
     filters: {
-      date_start: "2025-11-16",
+      date_start: "", // Kosongkan default agar menampilkan semua dulu
       date_end: "",
       form_type: "",
       keyword: "",
     },
-    // DATA DUMMY (Tetap sama)
+    // DATA DUMMY
     items: [
       {
         id: "W251204002",
@@ -61,29 +63,28 @@ var app = new Vue({
     filteredList: function () {
       // 1. FILTERING
       let result = this.items.filter((item) => {
-        // Filter Tab
-        if (
-          this.currentTab === "waiting" &&
-          item.status !== 0 &&
-          item.status !== 9
-        )
-          return false;
+        // A. Filter Tab Status
+        if (this.currentTab === "waiting" && item.status !== 0 && item.status !== 9) return false;
         if (this.currentTab === "approved" && item.status !== 1) return false;
-        if (this.currentTab === "rejected" && item.status !== 2) return false;
-        if (this.currentTab === "action_needed" && item.status !== 9)
-          return false;
+        if (this.currentTab === "rejected" && item.status !== 2 && item.status !== 3) return false;
+        if (this.currentTab === "action_needed" && item.status !== 9) return false;
 
-        // Filter Search
-        if (
-          this.filters.form_type === "holiday" &&
-          item.form_name !== "休日出勤申請"
-        )
-          return false;
-        if (
-          this.filters.form_type === "contract" &&
-          item.form_name !== "契約稟議"
-        )
-          return false;
+        // B. Filter Tipe Form
+        if (this.filters.form_type === "holiday" && item.form_name !== "休日出勤申請") return false;
+        if (this.filters.form_type === "contract" && item.form_name !== "契約稟議") return false;
+
+        // C. Filter Tanggal (Start - End) [FIXED]
+        // Konversi "2025.12.04" (Data) menjadi "2025-12-04" (Format Input HTML)
+        let itemDate = item.date.replace(/\./g, '-');
+        
+        if (this.filters.date_start && itemDate < this.filters.date_start) {
+            return false;
+        }
+        if (this.filters.date_end && itemDate > this.filters.date_end) {
+            return false;
+        }
+
+        // D. Filter Keyword
         if (this.filters.keyword) {
           const kw = this.filters.keyword.toLowerCase();
           const matchSubject = item.subject.toLowerCase().includes(kw);
@@ -93,21 +94,16 @@ var app = new Vue({
         return true;
       });
 
-      // 2. SORTING (Sesuai Spesifikasi PDF Hal. 11)
+      // 2. SORTING (Sesuai Spesifikasi)
       return result.sort((a, b) => {
-        // Ubah format tanggal "YYYY.MM.DD" jadi Date Object
         let dateA = new Date(a.date.replace(/\./g, "-"));
         let dateB = new Date(b.date.replace(/\./g, "-"));
 
-        // Jika Tab "Waiting" atau "Need Action": Urutkan TUA -> MUDA (Ascending)
-        if (
-          this.currentTab === "waiting" ||
-          this.currentTab === "action_needed"
-        ) {
+        // Tab "Waiting" / "Action Needed": Ascending (Tugas lama di atas)
+        if (this.currentTab === "waiting" || this.currentTab === "action_needed") {
           return dateA - dateB;
         }
-
-        // Tab Lainnya (All, Approved, Rejected): Urutkan MUDA -> TUA (Descending)
+        // Tab Lainnya: Descending (Terbaru di atas)
         return dateB - dateA;
       });
     },
@@ -118,11 +114,21 @@ var app = new Vue({
   },
   methods: {
     doSearch: function () {
-      console.log("Searching...");
+      console.log("Mencari dengan filter:", this.filters);
+      // Karena filter otomatis via computed, tombol ini hanya trigger visual/log
     },
     resetFilters: function () {
+      this.filters.date_start = "";
+      this.filters.date_end = "";
       this.filters.form_type = "";
       this.filters.keyword = "";
     },
+    // Helper untuk warna status text
+    getStatusClass: function(status) {
+        if(status === 1) return 'status-approved'; // Perlu CSS .status-approved { color: green; font-weight: bold; }
+        if(status === 2) return 'status-rejected'; // Perlu CSS .status-rejected { color: red; font-weight: bold; }
+        if(status === 9) return 'status-waiting';  // Perlu CSS .status-waiting { color: #f0ad4e; font-weight: bold; }
+        return '';
+    }
   },
 });

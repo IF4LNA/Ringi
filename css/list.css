@@ -258,3 +258,8 @@ body {
     .card-subject { font-size: 16px; font-weight: bold; margin-bottom: 10px; }
     .card-footer { border-top: 1px solid #eee; padding-top: 10px; text-align: right; }
 }
+
+/* Tambahan di css/list.css */
+.status-approved { color: #28a745; font-weight: bold; }
+.status-rejected { color: #dc3545; font-weight: bold; }
+.status-waiting { color: #e67e22; font-weight: bold; }
